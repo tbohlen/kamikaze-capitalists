@@ -1,5 +1,6 @@
 package core;
 
+
 public class Game {
 
     public final Player player1, player2;
@@ -60,6 +61,5 @@ public class Game {
 	    }
 	}
 	return connectedToCapital(x, y, player, searched);
-
     }
 }
