@@ -24,7 +24,7 @@ public class Game {
 	
 	buildings = new Building[width][height];
 	
-	buildings[0][0] = new Building(player1, true);			// placeholder capital locations
+	buildings[0][0] = new Building(player1, true);					// placeholder capital locations
 	buildings[width - 1][height - 1] = new Building(player2, true);	//
 	
 	state = GameState.STARTING;
