@@ -9,15 +9,15 @@ public class Building {
     public final boolean isCapital;
 
     public Building(Player owner) {
-	height = 1;
-	this.owner = owner;
-	isCapital = false;
+        height = 1;
+        this.owner = owner;
+        isCapital = false;
     }
 
     public Building(Player owner, boolean isCapital) {
-	height = 1;
-	this.owner = owner;
-	this.isCapital = isCapital;
+        height = 1;
+        this.owner = owner;
+        this.isCapital = isCapital;
     }
 
 }
