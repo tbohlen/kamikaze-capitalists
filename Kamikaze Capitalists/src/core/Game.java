@@ -57,5 +57,6 @@ public class Game {
 	    }
 	}
 	return connectedToCapital(x, y, player, searched);
+	
     }
 }
