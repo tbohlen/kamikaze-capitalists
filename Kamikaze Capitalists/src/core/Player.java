@@ -7,7 +7,7 @@ public class Player {
     public int actionCount;
 
     public Player(String name) {
-	this.name = name;
-	actionCount = 0;
+        this.name = name;
+        actionCount = 0;
     }
 }
