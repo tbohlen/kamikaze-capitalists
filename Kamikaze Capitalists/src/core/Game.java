@@ -30,6 +30,12 @@ public class Game {
 
         buildings[width - 1][height - 1] = new Building(player2, true); //
 
+        player1.xCursor = 0;
+        player1.yCursor = 0;
+
+        player2.xCursor = width - 1;
+        player2.yCursor = height - 1;
+
         state = GameState.STARTING;
     }
 
@@ -43,26 +49,31 @@ public class Game {
         searched[x][y] = true;
 
         Building b = buildings[x][y];
-        if (!isInitial && (b == null || !b.owner.equals(player))) {
-            return false;
-        } else if (b.isCapital) {
-            return true;
+        if (b == null || !b.owner.equals(player)) {
+            if (!isInitial) {
+                return false;
+            }
         } else {
-            return isConnectedToCapital(x - 1, y, player, searched, false)
-                    || isConnectedToCapital(x + 1, y, player, searched, false)
-                    || isConnectedToCapital(x, y - 1, player, searched, false)
-                    || isConnectedToCapital(x, y + 1, player, searched, false);
+            if (b.isCapital) {
+                return true;
+            }
         }
+        return isConnectedToCapital(x - 1, y, player, searched, false)
+                || isConnectedToCapital(x + 1, y, player, searched, false)
+                || isConnectedToCapital(x, y - 1, player, searched, false)
+                || isConnectedToCapital(x, y + 1, player, searched, false);
     }
 
     /**
+     * Check whether the given location is connected to a player's capital through only buildings owned by that player
+     * (the location itself does not need to contain a building owned by that player in order to be connected)
      * 
      * @param x
      *            x-value of location to check; must be 0 <= x < this.width
      * @param y
      *            y-value of location to check; must be 0 <= x < this.height
      * @param player
-     *            player whose capital to check against
+     *            the player whose capital and buildings are to be checked against
      */
     public boolean isConnectedToCapital(int x, int y, Player player) {
         boolean[][] searched = new boolean[width][height];

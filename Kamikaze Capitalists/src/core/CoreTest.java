@@ -79,10 +79,13 @@ public class CoreTest {
 
         assertTrue(g.isConnectedToCapital(0, 1, g.player1));
         assertTrue(g.isConnectedToCapital(0, 2, g.player1));
+        assertTrue(g.isConnectedToCapital(0, 3, g.player1));
 
         assertTrue(g.isConnectedToCapital(1, 0, g.player1));
         assertFalse(g.isConnectedToCapital(2, 0, g.player1));
 
         assertFalse(g.isConnectedToCapital(3, 3, g.player1));
+
+        assertFalse(g.isConnectedToCapital(4, 4, g.player1));
     }
 }

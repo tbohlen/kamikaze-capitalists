@@ -6,8 +6,13 @@ public class Player {
 
     public int actionCount;
 
+    public int xCursor, yCursor;
+
     public Player(String name) {
         this.name = name;
         actionCount = 0;
+
+        xCursor = 0;
+        yCursor = 0;
     }
 }

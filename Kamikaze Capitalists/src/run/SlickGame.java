@@ -6,31 +6,31 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
-public class SlickGame extends BasicGame{
+public class SlickGame extends BasicGame {
 
     public SlickGame() {
         super("Kamikaze Capitalists");
     }
 
     @Override
-    public void render(GameContainer arg0, Graphics arg1) throws SlickException {
+    public void render(GameContainer container, Graphics g) throws SlickException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
-    public void init(GameContainer arg0) throws SlickException {
+    public void init(GameContainer container) throws SlickException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
-    public void update(GameContainer arg0, int arg1) throws SlickException {
+    public void update(GameContainer container, int delta) throws SlickException {
         // TODO Auto-generated method stub
-        
+
     }
-    
-    public static void main(String[] args) throws SlickException{
+
+    public static void main(String[] args) throws SlickException {
         AppGameContainer app = new AppGameContainer(new SlickGame());
         app.setDisplayMode(800, 600, false);
         app.start();
