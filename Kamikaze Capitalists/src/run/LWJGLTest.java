@@ -8,7 +8,7 @@ import org.lwjgl.opengl.DisplayMode;
 public class LWJGLTest {
     
     @Test
-    public void RunTest() throws LWJGLException {
+    public void runTest() throws LWJGLException {
         Display.setDisplayMode(new DisplayMode(800, 600));
         Display.create();
 
