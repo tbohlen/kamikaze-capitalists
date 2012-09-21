@@ -84,4 +84,30 @@ public class Game {
         }
         return isConnectedToCapital(x, y, player, searched, true);
     }
+
+    public enum Direction {
+        UP(0, -1), LEFT(-1, 0), DOWN(0, 1), RIGHT(1, 0), NONE(0, 0);
+
+        public final int dx, dy;
+
+        private Direction(int dx, int dy) {
+            this.dx = dx;
+            this.dy = dy;
+        }
+    }
+
+    public void knockOverBuilding(int x, int y, Direction dir) {
+        // TODO: figure out exact knockover logic
+        int height = buildings[x][y].height - 1;
+        buildings[x][y] = null;
+        while (height > 0) {
+            x += dir.dx;
+            y += dir.dy;
+            if (buildings[x][y] != null) {
+                height -= buildings[x][y].height;
+            }
+            height--;
+            buildings[x][y] = null;
+        }
+    }
 }
