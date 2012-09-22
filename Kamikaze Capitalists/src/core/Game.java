@@ -27,8 +27,10 @@ public class Game {
         buildings = new Building[width][height];
 
         buildings[0][0] = new Building(player1, true); // placeholder capital locations
+        player1.hasCapital = true;
 
-        buildings[width - 1][height - 1] = new Building(player2, true); //
+        buildings[width - 1][height - 1] = new Building(player2, true);
+        player2.hasCapital = true;
 
         player1.xCursor = 0;
         player1.yCursor = 0;
@@ -98,16 +100,22 @@ public class Game {
 
     public void knockOverBuilding(int x, int y, Direction dir) {
         // TODO: figure out exact knockover logic
-        int height = buildings[x][y].height - 1;
-        buildings[x][y] = null;
+        int height = buildings[x][y].height * 2 + 1;
         while (height > 0) {
-            x += dir.dx;
-            y += dir.dy;
-            if (buildings[x][y] != null) {
-                height -= buildings[x][y].height;
+            Building b = buildings[x][y];
+            if (b != null) {
+                height -= b.height;
+                if (b.isCapital) {
+                    b.owner.hasCapital = false;
+                }
             }
             height--;
             buildings[x][y] = null;
+            x += dir.dx;
+            y += dir.dy;
+            if (x < 0 || x >= width || y < 0 || y >= height) {
+                break;
+            }
         }
     }
 }

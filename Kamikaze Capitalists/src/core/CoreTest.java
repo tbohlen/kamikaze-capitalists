@@ -88,4 +88,6 @@ public class CoreTest {
 
         assertFalse(g.isConnectedToCapital(4, 4, g.player1));
     }
+
+    // TODO: write Game.knockOverBuilding() tests
 }

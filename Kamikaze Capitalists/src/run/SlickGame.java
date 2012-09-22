@@ -58,6 +58,7 @@ public class SlickGame extends BasicGame {
     @Override
     public void init(GameContainer container) throws SlickException {
         game = new Game(8, 6);
+        game.state = Game.GameState.RUNNING;
     }
 
     private static int bound(int num, int min, int max) {
@@ -72,9 +73,12 @@ public class SlickGame extends BasicGame {
 
     @Override
     public void update(GameContainer container, int delta) throws SlickException {
-        updatePlayer(container, delta, game.player1, Input.KEY_W, Input.KEY_A, Input.KEY_S, Input.KEY_D, Input.KEY_T);
-        updatePlayer(container, delta, game.player2, Input.KEY_UP, Input.KEY_LEFT, Input.KEY_DOWN, Input.KEY_RIGHT,
-                Input.KEY_PERIOD);
+        if (game.state == Game.GameState.RUNNING) {
+            updatePlayer(container, delta, game.player1, Input.KEY_W, Input.KEY_A, Input.KEY_S, Input.KEY_D,
+                    Input.KEY_T);
+            updatePlayer(container, delta, game.player2, Input.KEY_UP, Input.KEY_LEFT, Input.KEY_DOWN, Input.KEY_RIGHT,
+                    Input.KEY_PERIOD);
+        }
     }
 
     private void updatePlayer(GameContainer container, int delta, Player player, int up, int left, int down, int right,
@@ -111,6 +115,9 @@ public class SlickGame extends BasicGame {
                             if (b != null && b.owner == player) {
                                 game.knockOverBuilding(player.xCursor, player.yCursor, dir);
                                 player.actionCount = 0;
+                                if (!game.player1.hasCapital || !game.player2.hasCapital) {
+                                    game.state = Game.GameState.DONE;
+                                }
                             }
                         }
                     }
