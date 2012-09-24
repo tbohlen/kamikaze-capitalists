@@ -136,7 +136,7 @@ public class PlayGameState extends BasicGameState {
 
     @Override
     public int getID() {
-        return 0;
+        return 1;
     }
 
     @Override
