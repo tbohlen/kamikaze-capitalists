@@ -31,7 +31,6 @@ public class MainMenuGameState extends BasicGameState {
 
             @Override
             public void onClick(Button clicked, float mx, float my) {
-                System.out.println("GOGO");
                 game.enterState(1);
             }
 
