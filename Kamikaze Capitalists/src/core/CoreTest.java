@@ -40,7 +40,7 @@ public class CoreTest {
 
     @Test
     public void gameTest() {
-        Game g = new Game(4, 5);
+        Board g = new Board(4, 5);
 
         assertEquals(g.width, 4);
         assertEquals(g.height, 5);
@@ -61,12 +61,12 @@ public class CoreTest {
                 }
             }
         }
-        assertEquals(g.state, Game.GameState.STARTING);
+        assertEquals(g.state, Board.BoardState.STARTING);
     }
 
     @Test
     public void connectedToCapitalTest() {
-        Game g = new Game(5, 5);
+        Board g = new Board(5, 5);
         g.buildings[0][1] = new Building(g.player1);
         g.buildings[0][2] = new Building(g.player1);
 
