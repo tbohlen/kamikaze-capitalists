@@ -41,38 +41,72 @@ public class PlayGameState extends BasicGameState {
                 }
             }
         }
-        renderPlayer(container, game, g, board.player1, Color.red);
-        renderPlayer(container, game, g, board.player2, Color.blue);
+        renderPlayer(container, game, g, board.player1, Color.red, 10);
+        renderPlayer(container, game, g, board.player2, Color.blue, container.getWidth() - 10);
+        switch (board.state) {
+        case PAUSED:
+            g.setColor(Color.white);
+            g.drawString("PAUSED", container.getWidth() / 2, container.getHeight() / 2);
+            break;
+        case DONE:
+            g.setColor(Color.white);
+            Player winner = board.player1.hasCapital ? board.player1 : board.player2;
+            g.drawString(winner.name + " WINS!", container.getWidth() / 2, container.getHeight() / 2);
+            break;
+        }
     }
 
-    private void renderPlayer(GameContainer container, StateBasedGame game, Graphics g, Player player, Color color)
-            throws SlickException {
+    private void renderPlayer(GameContainer container, StateBasedGame game, Graphics g, Player player, Color color,
+            float xActionBar) throws SlickException {
         g.setColor(color);
         g.setLineWidth(5);
-        g.drawRect(player.xCursor * 100, player.yCursor * 100, 100, 100);
+        g.drawRect(player.getXCursorIndex() * 100, player.getYCursorIndex() * 100, 100, 100);
+        g.fillRect(xActionBar - 5, 5, 10, (float) player.actionCount / Player.MAX_ACTION_COUNT
+                * (container.getHeight() - 10));
+        g.setColor(Color.black);
+        g.drawRect(xActionBar - 5, 5, 10, (float) player.actionCount / Player.MAX_ACTION_COUNT
+                * (container.getHeight() - 10));
     }
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
     }
 
-    private static int bound(int num, int min, int max) {
-        if (num < min) {
-            return min;
+    private static float bound(float num, int min, int max) {
+        if (Math.round(num) < min) {
+            return min - 0.5f;
         }
-        if (num >= max) {
-            return max - 1;
+        if (Math.round(num) >= max) {
+            return max - 1 + 0.499999f;
         }
         return num;
     }
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        if (board.state == Board.BoardState.RUNNING) {
+        if (container.getInput().isKeyPressed(Input.KEY_LSHIFT) || container.getInput().isKeyPressed(Input.KEY_RSHIFT)) {
+            game.enterState(0);
+        }
+        switch (board.state) {
+        case RUNNING:
+            if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
+                board.state = Board.BoardState.PAUSED;
+                update(container, game, delta);
+            }
             updatePlayer(container, game, delta, board.player1, Input.KEY_W, Input.KEY_A, Input.KEY_S, Input.KEY_D,
                     Input.KEY_T);
             updatePlayer(container, game, delta, board.player2, Input.KEY_UP, Input.KEY_LEFT, Input.KEY_DOWN,
                     Input.KEY_RIGHT, Input.KEY_PERIOD);
+            break;
+        case PAUSED:
+            if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
+                board.state = Board.BoardState.RUNNING;
+                update(container, game, delta);
+            }
+        case DONE:
+            if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
+                game.enterState(1);
+            }
         }
     }
 
@@ -80,7 +114,7 @@ public class PlayGameState extends BasicGameState {
             int down, int right, int action) throws SlickException {
 
         player.actionCount += delta;
-        player.actionCount = Math.min(player.actionCount, 1000); // arbitrary actionCount limit
+        player.actionCount = Math.min(player.actionCount, Player.MAX_ACTION_COUNT); // arbitrary actionCount limit
 
         if (!container.getInput().isKeyDown(action)) {
             if (container.getInput().isKeyPressed(action)) {
@@ -95,20 +129,21 @@ public class PlayGameState extends BasicGameState {
                     } else if (container.getInput().isKeyDown(up)) {
                         dir = Direction.UP;
                     }
-                    if (board.isConnectedToCapital(player.xCursor, player.yCursor, player)) {
+                    if (board.isConnectedToCapital(player.getXCursorIndex(), player.getYCursorIndex(), player)) {
                         if (dir == null) {
-                            Building b = board.buildings[player.xCursor][player.yCursor];
+                            Building b = board.buildings[player.getXCursorIndex()][player.getYCursorIndex()];
                             if (b == null) {
-                                board.buildings[player.xCursor][player.yCursor] = new Building(player);
+                                board.buildings[player.getXCursorIndex()][player.getYCursorIndex()] = new Building(
+                                        player);
                                 player.actionCount = 0;
                             } else if (b.owner == player) {
                                 b.height++;
                                 player.actionCount = 0;
                             }
                         } else {
-                            Building b = board.buildings[player.xCursor][player.yCursor];
+                            Building b = board.buildings[player.getXCursorIndex()][player.getYCursorIndex()];
                             if (b != null && b.owner == player) {
-                                board.knockOverBuilding(player.xCursor, player.yCursor, dir);
+                                board.knockOverBuilding(player.getXCursorIndex(), player.getYCursorIndex(), dir);
                                 player.actionCount = 0;
                                 if (!board.player1.hasCapital || !board.player2.hasCapital) {
                                     board.state = Board.BoardState.DONE;
@@ -119,15 +154,19 @@ public class PlayGameState extends BasicGameState {
                 }
             } else {
                 if (container.getInput().isKeyDown(right)) {
-                    player.xCursor++;
+                    player.xCursor += .01 * delta;
                 } else if (container.getInput().isKeyDown(left)) {
-                    player.xCursor--;
+                    player.xCursor -= .01 * delta;
+                } else {
+                    player.xCursor = player.getXCursorIndex();
                 }
                 player.xCursor = bound(player.xCursor, 0, board.width);
                 if (container.getInput().isKeyDown(down)) {
-                    player.yCursor++;
+                    player.yCursor += .01 * delta;
                 } else if (container.getInput().isKeyDown(up)) {
-                    player.yCursor--;
+                    player.yCursor -= .01 * delta;
+                } else {
+                    player.yCursor = player.getYCursorIndex();
                 }
                 player.yCursor = bound(player.yCursor, 0, board.height);
             }

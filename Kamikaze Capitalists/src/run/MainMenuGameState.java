@@ -1,5 +1,6 @@
 package run;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -49,6 +50,7 @@ public class MainMenuGameState extends BasicGameState {
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         for (int i = 0; i < buttons.length; i++) {
+            g.setColor(Color.white);
             buttons[i].render(container, g);
         }
     }
