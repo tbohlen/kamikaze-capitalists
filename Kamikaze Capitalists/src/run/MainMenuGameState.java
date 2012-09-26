@@ -18,25 +18,35 @@ public class MainMenuGameState extends BasicGameState {
 
     private StickyListener stickyListener = new StickyListener();
 
-    private SimpleButton[] buttons = new SimpleButton[4];
+    private SimpleButton[] buttons = new SimpleButton[2];
+
+    private Image logoImage;
 
     @Override
     public void init(GameContainer container, final StateBasedGame game) throws SlickException {
         for (int i = 0; i < buttons.length; i++) {
 
-            final float buttonX = (container.getWidth() - 200) / 2;
-            final float buttonY = (container.getHeight() - 100) * (i + .5f) / buttons.length;
-            final int buttonWidth = 200;
-            final int buttonHeight = 100;
+            final float buttonX = (100 + i * 348);
+            final float buttonY = (container.getHeight() - 100);
+            final int buttonWidth = 252;
+            final int buttonHeight = 63;
 
             Rectangle buttonContainer = new Rectangle(buttonX, buttonY, buttonWidth, buttonHeight);
-            Image buttonImage = new Image("lwjgl/res/ball.png");
+
+            Image buttonImage = null;
+            if (i == 0)
+                buttonImage = new Image("resources/startgame.png");
+            if (i == 1)
+                buttonImage = new Image("resources/instructions.png");
+
             Sound buttonSound = new Sound("lwjgl/res/ding.wav");
 
             buttons[i] = new SimpleButton(buttonContainer, buttonImage, buttonImage, buttonSound);
 
             stickyListener.add(buttons[i]);
         }
+
+        logoImage = new Image("resources/logo.png");
 
         buttons[0].addListener(new ClickListener() {
 
@@ -77,6 +87,7 @@ public class MainMenuGameState extends BasicGameState {
         for (int i = 0; i < buttons.length; i++) {
             buttons[i].render(container, g);
         }
+        logoImage.draw(40, -50);
     }
 
     @Override
@@ -89,6 +100,7 @@ public class MainMenuGameState extends BasicGameState {
     @Override
     public int getID() {
         return 0;
+
     }
 
 }
