@@ -3,6 +3,7 @@ package run;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
@@ -17,6 +18,8 @@ public class PlayGameState extends BasicGameState {
 
     private Board board;
 
+    private Image player1Building, player1Capital, player2Building, player2Capital;
+
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         g.setColor(Color.gray);
@@ -26,16 +29,33 @@ public class PlayGameState extends BasicGameState {
                 Building b = board.buildings[i][j];
                 if (b == null) {
                 } else {
+                    Image im;
                     if (b.owner == board.player1) {
-                        g.setColor(Color.red);
+                        if (b.isCapital) {
+                            im = player1Capital;
+                        } else {
+                            im = player1Building;
+                        }
                     } else {
-                        g.setColor(Color.blue);
+                        if (b.isCapital) {
+                            im = player2Capital;
+                        } else {
+                            im = player2Building;
+                        }
                     }
-                    g.fillRect((i + .1f) * 100, (j + .1f) * 100, 80, 80);
-                    if (b.isCapital) {
-                        g.setColor(Color.orange);
-                        g.fillRect((i + .3f) * 100, (j + .3f) * 100, 40, 40);
-                    }
+                    im.draw((i + 0.1f) * 100, (j + 0.1f) * 100);
+
+                    // if (b.owner == board.player1) {
+                    // g.setColor(Color.red);
+                    // } else {
+                    // g.setColor(Color.blue);
+                    // }
+                    // g.fillRect((i + .1f) * 100, (j + .1f) * 100, 80, 80);
+                    // if (b.isCapital) {
+                    // g.setColor(Color.orange);
+                    // g.fillRect((i + .3f) * 100, (j + .3f) * 100, 40, 40);
+                    // }
+
                     g.setColor(Color.black);
                     g.drawString(Integer.toString(b.height), (i + .5f) * 100 - 5, (j + .5f) * 100 - 10);
                 }
@@ -70,6 +90,10 @@ public class PlayGameState extends BasicGameState {
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
+        player1Building = new Image("resources/player1.png");
+        player1Capital = new Image("resources/player1capital.png");
+        player2Building = new Image("resources/player2.png");
+        player2Capital = new Image("resources/player2capital.png");
     }
 
     private static float bound(float num, int min, int max) {
