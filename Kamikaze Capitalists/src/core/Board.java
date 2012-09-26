@@ -100,16 +100,13 @@ public class Board {
 
     public void knockOverBuilding(int x, int y, Direction dir) {
         // TODO: figure out exact knockover logic
-        int h = buildings[x][y].height * 2;
-        while (h > 0) {
+        for (int h = buildings[x][y].height; h > 0; h--) {
             Building b = buildings[x][y];
             if (b != null) {
-                h -= b.height;
                 if (b.isCapital) {
                     b.owner.hasCapital = false;
                 }
             }
-            h--;
             buildings[x][y] = null;
             x += dir.dx;
             y += dir.dy;
@@ -117,5 +114,23 @@ public class Board {
                 break;
             }
         }
+
+        // int h = buildings[x][y].height * 2;
+        // while (h > 0) {
+        // Building b = buildings[x][y];
+        // if (b != null) {
+        // h -= b.height;
+        // if (b.isCapital) {
+        // b.owner.hasCapital = false;
+        // }
+        // }
+        // h--;
+        // buildings[x][y] = null;
+        // x += dir.dx;
+        // y += dir.dy;
+        // if (x < 0 || x >= width || y < 0 || y >= height) {
+        // break;
+        // }
+        // }
     }
 }

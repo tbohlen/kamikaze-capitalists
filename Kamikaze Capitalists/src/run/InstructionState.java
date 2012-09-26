@@ -24,8 +24,8 @@ public class InstructionState extends BasicGameState {
     @Override
     public void init(GameContainer container, final StateBasedGame game) throws SlickException {
 
-        final float buttonX = 100;// (container.getWidth() - 200) / 2;
-        final float buttonY = 100;// (container.getHeight() - 100) * (1 + .5f);
+        final float buttonX = 150;// (container.getWidth() - 200) / 2;
+        final float buttonY = 50;// (container.getHeight() - 100) * (1 + .5f);
         final int buttonWidth = 200;
         final int buttonHeight = 100;
 
@@ -41,7 +41,6 @@ public class InstructionState extends BasicGameState {
 
             @Override
             public void onClick(Button clicked, float mx, float my) {
-                System.out.println("Instructions -> MainMenu");
                 game.enterState(0);
             }
 
@@ -61,7 +60,17 @@ public class InstructionState extends BasicGameState {
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         g.setColor(Color.white);
-        g.drawString("Instructions go here! \n" + "InstructionState.java.render()", 300, 300);
+        g.drawString("Your goal is to destroy your opponent's capital building.\n"
+                + "Buildings can be destroyed by collapsing your buildings on them.\n" + "\n"
+                + "Taller building will collapse across more spaces (building's height minus 1).\n"
+                + "You can only build on or collapse spaces which are connected to your capital\n"
+                + "by your own buildings, and only once your action bar has filled.\n" + "\n"
+                + "To move: use directional keys\n" + "To build: press action key\n"
+                + "To collapse: hold action key, hold directional key, release action key\n" + "\n"
+                + "Player 1 (red): directional keys = WASD, action key = T\n"
+                + "Player 2 (blue): directional keys = arrow keys, action key = .\n" + "\n"
+                + "During the game, press SPACE to pause/unpause or SHIFT to quit.\n"
+                + "Once the game is over, prese SPACE to start a new game or SHIFT to quit.\n", 100, 150);
         buttons[0].render(container, g);
     }
 
