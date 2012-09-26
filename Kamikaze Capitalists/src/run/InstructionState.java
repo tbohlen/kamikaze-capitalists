@@ -4,6 +4,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.geom.Rectangle;
@@ -35,7 +36,7 @@ public class InstructionState extends BasicGameState {
 
         buttons[0] = new SimpleButton(buttonContainer, buttonImage, buttonImage, buttonSound);
 
-        stickyListener.add(buttons[0]);
+        // stickyListener.add(buttons[0]);
 
         buttons[0].addListener(new ClickListener() {
 
@@ -71,12 +72,17 @@ public class InstructionState extends BasicGameState {
                 + "Player 2 (blue): directional keys = arrow keys, action key = .\n" + "\n"
                 + "During the game, press SPACE to pause/unpause or SHIFT to quit.\n"
                 + "Once the game is over, prese SPACE to start a new game or SHIFT to quit.\n", 100, 150);
-        buttons[0].render(container, g);
+        // buttons[0].render(container, g);
+        g.setColor(Color.white);
+        g.drawString("ESC to go back", 50, 50);
     }
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        buttons[0].update(container, delta);
+        // buttons[0].update(container, delta);
+        if (container.getInput().isKeyPressed(Input.KEY_ESCAPE) && container.getInput().isKeyDown(Input.KEY_ESCAPE)) {
+            game.enterState(0);
+        }
     }
 
     @Override
