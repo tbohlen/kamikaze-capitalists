@@ -18,7 +18,7 @@ public class PlayGameState extends BasicGameState {
 
     private Board board;
 
-    private Image player1Building, player1Capital, player2Building, player2Capital;
+    private Image player1Building, player1Capital, player2Building, player2Capital, disabled;
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
@@ -46,6 +46,9 @@ public class PlayGameState extends BasicGameState {
                         }
                     }
                     im.draw(100 + (i + 0.1f) * 100, (j + 0.1f) * 100);
+                    if (!board.isConnectedToCapital(i, j, b.owner)) {
+                        disabled.draw(100 + (i + 0.1f) * 100, (j + 0.1f) * 100);
+                    }
 
                     // if (b.owner == board.player1) {
                     // g.setColor(Color.red);
@@ -96,6 +99,7 @@ public class PlayGameState extends BasicGameState {
         player1Capital = new Image("resources/player1capital.png");
         player2Building = new Image("resources/player2.png");
         player2Capital = new Image("resources/player2capital.png");
+        disabled = new Image("resources/disabled.png");
     }
 
     private static float bound(float num, int min, int max) {
