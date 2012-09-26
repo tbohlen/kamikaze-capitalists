@@ -22,11 +22,13 @@ public class PlayGameState extends BasicGameState {
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
-        g.setColor(Color.gray);
-        g.fillRect(100, 0, 600, 600);
+        g.setColor(Color.darkGray);
+        g.fillRect(0, 0, 800, 600);
         for (int i = 0; i < board.width; i++) {
             for (int j = 0; j < board.height; j++) {
                 Building b = board.buildings[i][j];
+                g.setColor(Color.gray);
+                g.fillRect(100 + (i + 0.05f) * 100, (j + 0.05f) * 100, 90, 90);
                 if (b == null) {
                 } else {
                     Image im;
@@ -83,9 +85,9 @@ public class PlayGameState extends BasicGameState {
         g.drawRect(100 + player.getXCursorIndex() * 100, player.getYCursorIndex() * 100, 100, 100);
         g.fillRect(xActionBar - 25, 5, 50,
                 (float) player.actionCount / Player.MAX_ACTION_COUNT * (container.getHeight() - 10));
-        // g.setColor(Color.gray);
-        // g.drawRect(xActionBar - 10, 10, 10,
-        // (float) player.actionCount / Player.MAX_ACTION_COUNT * (container.getHeight() - 10));
+        g.setColor(Color.black);
+        g.drawRect(xActionBar - 25, 5, 50,
+                (float) player.actionCount / Player.MAX_ACTION_COUNT * (container.getHeight() - 10));
     }
 
     @Override
@@ -118,9 +120,9 @@ public class PlayGameState extends BasicGameState {
                 update(container, game, delta);
             }
             updatePlayer(container, game, delta, board.player1, Input.KEY_W, Input.KEY_A, Input.KEY_S, Input.KEY_D,
-                    Input.KEY_T);
+                    Input.KEY_T, Input.KEY_Y);
             updatePlayer(container, game, delta, board.player2, Input.KEY_UP, Input.KEY_LEFT, Input.KEY_DOWN,
-                    Input.KEY_RIGHT, Input.KEY_PERIOD);
+                    Input.KEY_RIGHT, Input.KEY_PERIOD, Input.KEY_COMMA);
             break;
         case PAUSED:
             if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
@@ -135,14 +137,14 @@ public class PlayGameState extends BasicGameState {
     }
 
     private void updatePlayer(GameContainer container, StateBasedGame game, int delta, Player player, int up, int left,
-            int down, int right, int action) throws SlickException {
+            int down, int right, int build, int collapse) throws SlickException {
 
         player.actionCount += delta;
         player.actionCount = Math.min(player.actionCount, Player.MAX_ACTION_COUNT); // arbitrary actionCount limit
 
-        if (!container.getInput().isKeyDown(action)) {
-            if (container.getInput().isKeyPressed(action)) {
-                if (player.actionCount == 1000) {
+        if (container.getInput().isKeyDown(collapse)) {
+            if (player.actionCount == 1000) {
+                if (board.isConnectedToCapital(player.getXCursorIndex(), player.getYCursorIndex(), player)) {
                     Board.Direction dir = null;
                     if (container.getInput().isKeyDown(right)) {
                         dir = Direction.RIGHT;
@@ -153,48 +155,113 @@ public class PlayGameState extends BasicGameState {
                     } else if (container.getInput().isKeyDown(up)) {
                         dir = Direction.UP;
                     }
-                    if (board.isConnectedToCapital(player.getXCursorIndex(), player.getYCursorIndex(), player)) {
-                        if (dir == null) {
-                            Building b = board.buildings[player.getXCursorIndex()][player.getYCursorIndex()];
-                            if (b == null) {
-                                board.buildings[player.getXCursorIndex()][player.getYCursorIndex()] = new Building(
-                                        player);
-                                player.actionCount = 0;
-                            } else if (b.owner == player) {
-                                b.height++;
-                                player.actionCount = 0;
-                            }
-                        } else {
-                            Building b = board.buildings[player.getXCursorIndex()][player.getYCursorIndex()];
-                            if (b != null && b.owner == player) {
-                                board.knockOverBuilding(player.getXCursorIndex(), player.getYCursorIndex(), dir);
-                                player.actionCount = 0;
-                                if (!board.player1.hasCapital || !board.player2.hasCapital) {
-                                    board.state = Board.BoardState.DONE;
-                                }
+                    if (dir != null) {
+                        // collapsing
+                        Building b = board.buildings[player.getXCursorIndex()][player.getYCursorIndex()];
+                        if (b != null && b.owner == player) {
+                            board.knockOverBuilding(player.getXCursorIndex(), player.getYCursorIndex(), dir);
+                            player.actionCount = 0;
+                            if (!board.player1.hasCapital || !board.player2.hasCapital) {
+                                board.state = Board.BoardState.DONE;
                             }
                         }
                     }
                 }
+            }
+        } else {
+            // moving cursor
+            if (container.getInput().isKeyDown(right)) {
+                player.xCursor += .01 * delta;
+            } else if (container.getInput().isKeyDown(left)) {
+                player.xCursor -= .01 * delta;
             } else {
-                if (container.getInput().isKeyDown(right)) {
-                    player.xCursor += .01 * delta;
-                } else if (container.getInput().isKeyDown(left)) {
-                    player.xCursor -= .01 * delta;
-                } else {
-                    player.xCursor = player.getXCursorIndex();
+                player.xCursor = player.getXCursorIndex();
+            }
+            player.xCursor = bound(player.xCursor, 0, board.width);
+            if (container.getInput().isKeyDown(down)) {
+                player.yCursor += .01 * delta;
+            } else if (container.getInput().isKeyDown(up)) {
+                player.yCursor -= .01 * delta;
+            } else {
+                player.yCursor = player.getYCursorIndex();
+            }
+            player.yCursor = bound(player.yCursor, 0, board.height);
+        }
+
+        if (container.getInput().isKeyPressed(build)) {
+            if (player.actionCount == 1000) {
+                // building
+                if (board.isConnectedToCapital(player.getXCursorIndex(), player.getYCursorIndex(), player)) {
+                    Building b = board.buildings[player.getXCursorIndex()][player.getYCursorIndex()];
+                    if (b == null) {
+                        board.buildings[player.getXCursorIndex()][player.getYCursorIndex()] = new Building(player);
+                        player.actionCount = 0;
+                    } else if (b.owner == player) {
+                        b.height++;
+                        player.actionCount = 0;
+                    }
                 }
-                player.xCursor = bound(player.xCursor, 0, board.width);
-                if (container.getInput().isKeyDown(down)) {
-                    player.yCursor += .01 * delta;
-                } else if (container.getInput().isKeyDown(up)) {
-                    player.yCursor -= .01 * delta;
-                } else {
-                    player.yCursor = player.getYCursorIndex();
-                }
-                player.yCursor = bound(player.yCursor, 0, board.height);
             }
         }
+
+        // if (!container.getInput().isKeyDown(action)) {
+        // if (container.getInput().isKeyPressed(action)) {
+        // if (player.actionCount == 1000) {
+        // Board.Direction dir = null;
+        // if (container.getInput().isKeyDown(right)) {
+        // dir = Direction.RIGHT;
+        // } else if (container.getInput().isKeyDown(left)) {
+        // dir = Direction.LEFT;
+        // } else if (container.getInput().isKeyDown(down)) {
+        // dir = Direction.DOWN;
+        // } else if (container.getInput().isKeyDown(up)) {
+        // dir = Direction.UP;
+        // }
+        // if (board.isConnectedToCapital(player.getXCursorIndex(), player.getYCursorIndex(), player)) {
+        // if (dir == null) {
+        // // building
+        // Building b = board.buildings[player.getXCursorIndex()][player.getYCursorIndex()];
+        // if (b == null) {
+        // board.buildings[player.getXCursorIndex()][player.getYCursorIndex()] = new Building(
+        // player);
+        // player.actionCount = 0;
+        // } else if (b.owner == player) {
+        // b.height++;
+        // player.actionCount = 0;
+        // }
+        // } else {
+        // // collapsing
+        // Building b = board.buildings[player.getXCursorIndex()][player.getYCursorIndex()];
+        // if (b != null && b.owner == player) {
+        // board.knockOverBuilding(player.getXCursorIndex(), player.getYCursorIndex(), dir);
+        // player.actionCount = 0;
+        // if (!board.player1.hasCapital || !board.player2.hasCapital) {
+        // board.state = Board.BoardState.DONE;
+        // }
+        // }
+        // }
+        // }
+        // }
+        // } else {
+        // // moving cursor
+        // if (container.getInput().isKeyDown(right)) {
+        // player.xCursor += .01 * delta;
+        // } else if (container.getInput().isKeyDown(left)) {
+        // player.xCursor -= .01 * delta;
+        // } else {
+        // player.xCursor = player.getXCursorIndex();
+        // }
+        // player.xCursor = bound(player.xCursor, 0, board.width);
+        // if (container.getInput().isKeyDown(down)) {
+        // player.yCursor += .01 * delta;
+        // } else if (container.getInput().isKeyDown(up)) {
+        // player.yCursor -= .01 * delta;
+        // } else {
+        // player.yCursor = player.getYCursorIndex();
+        // }
+        // player.yCursor = bound(player.yCursor, 0, board.height);
+        // }
+        // }
     }
 
     @Override

@@ -66,10 +66,10 @@ public class InstructionState extends BasicGameState {
                 + "Taller building will collapse across more spaces (building's height minus 1).\n"
                 + "You can only build on or collapse spaces which are connected to your capital\n"
                 + "by your own buildings, and only once your action bar has filled.\n" + "\n"
-                + "To move: use directional keys\n" + "To build: press action key\n"
-                + "To collapse: hold action key, hold directional key, release action key\n" + "\n"
-                + "Player 1 (red): directional keys = WASD, action key = T\n"
-                + "Player 2 (blue): directional keys = arrow keys, action key = .\n" + "\n"
+                + "To move: use directional keys\n" + "To build: press build key\n"
+                + "To collapse: hold collapse key and press a directional key\n" + "\n" + "Player 1 (red):\n"
+                + "directional keys = WASD, build key = T, collapse key = Y\n" + "Player 2 (blue):\n"
+                + "directional keys = arrow keys, build key = PERIOD, collapse key = COMMA\n" + "\n"
                 + "During the game, press SPACE to pause/unpause or SHIFT to quit.\n"
                 + "Once the game is over, prese SPACE to start a new game or SHIFT to quit.\n", 100, 150);
         // buttons[0].render(container, g);
