@@ -23,7 +23,7 @@ public class PlayGameState extends BasicGameState {
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         g.setColor(Color.gray);
-        g.fillRect(0, 0, 800, 600);
+        g.fillRect(100, 0, 600, 600);
         for (int i = 0; i < board.width; i++) {
             for (int j = 0; j < board.height; j++) {
                 Building b = board.buildings[i][j];
@@ -43,7 +43,7 @@ public class PlayGameState extends BasicGameState {
                             im = player2Building;
                         }
                     }
-                    im.draw((i + 0.1f) * 100, (j + 0.1f) * 100);
+                    im.draw(100 + (i + 0.1f) * 100, (j + 0.1f) * 100);
 
                     // if (b.owner == board.player1) {
                     // g.setColor(Color.red);
@@ -57,12 +57,12 @@ public class PlayGameState extends BasicGameState {
                     // }
 
                     g.setColor(Color.black);
-                    g.drawString(Integer.toString(b.height), (i + .5f) * 100 - 5, (j + .5f) * 100 - 10);
+                    g.drawString(Integer.toString(b.height), 100 + (i + .5f) * 100 - 5, (j + .5f) * 100 - 10);
                 }
             }
         }
-        renderPlayer(container, game, g, board.player1, Color.red, 10);
-        renderPlayer(container, game, g, board.player2, Color.blue, container.getWidth() - 10);
+        renderPlayer(container, game, g, board.player1, Color.red, 50);
+        renderPlayer(container, game, g, board.player2, Color.blue, container.getWidth() - 50);
         switch (board.state) {
         case PAUSED:
             g.setColor(Color.white);
@@ -80,12 +80,12 @@ public class PlayGameState extends BasicGameState {
             float xActionBar) throws SlickException {
         g.setColor(color);
         g.setLineWidth(5);
-        g.drawRect(player.getXCursorIndex() * 100, player.getYCursorIndex() * 100, 100, 100);
-        g.fillRect(xActionBar - 5, 5, 10, (float) player.actionCount / Player.MAX_ACTION_COUNT
-                * (container.getHeight() - 10));
-        g.setColor(Color.black);
-        g.drawRect(xActionBar - 5, 5, 10, (float) player.actionCount / Player.MAX_ACTION_COUNT
-                * (container.getHeight() - 10));
+        g.drawRect(100 + player.getXCursorIndex() * 100, player.getYCursorIndex() * 100, 100, 100);
+        g.fillRect(xActionBar - 25, 5, 50,
+                (float) player.actionCount / Player.MAX_ACTION_COUNT * (container.getHeight() - 10));
+        // g.setColor(Color.gray);
+        // g.drawRect(xActionBar - 10, 10, 10,
+        // (float) player.actionCount / Player.MAX_ACTION_COUNT * (container.getHeight() - 10));
     }
 
     @Override
@@ -204,7 +204,7 @@ public class PlayGameState extends BasicGameState {
 
     @Override
     public void enter(GameContainer container, StateBasedGame game) {
-        board = new Board(8, 6);
+        board = new Board(6, 6);
         board.state = Board.BoardState.RUNNING;
     }
 
