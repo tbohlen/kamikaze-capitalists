@@ -6,6 +6,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -18,7 +19,10 @@ public class PlayGameState extends BasicGameState {
 
     private Board board;
 
-    private Image player1Building, player1Capital, player2Building, player2Capital, disabled;
+    private Image player1BuildingImage, player1CapitalImage, player2BuildingImage, player2CapitalImage,
+            disabledOverlayImage;
+
+    private Sound buildSound, collapseSound;
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
@@ -34,32 +38,21 @@ public class PlayGameState extends BasicGameState {
                     Image im;
                     if (b.owner == board.player1) {
                         if (b.isCapital) {
-                            im = player1Capital;
+                            im = player1CapitalImage;
                         } else {
-                            im = player1Building;
+                            im = player1BuildingImage;
                         }
                     } else {
                         if (b.isCapital) {
-                            im = player2Capital;
+                            im = player2CapitalImage;
                         } else {
-                            im = player2Building;
+                            im = player2BuildingImage;
                         }
                     }
                     im.draw(100 + (i + 0.1f) * 100, (j + 0.1f) * 100);
                     if (!board.isConnectedToCapital(i, j, b.owner)) {
-                        disabled.draw(100 + (i + 0.1f) * 100, (j + 0.1f) * 100);
+                        disabledOverlayImage.draw(100 + (i + 0.1f) * 100, (j + 0.1f) * 100);
                     }
-
-                    // if (b.owner == board.player1) {
-                    // g.setColor(Color.red);
-                    // } else {
-                    // g.setColor(Color.blue);
-                    // }
-                    // g.fillRect((i + .1f) * 100, (j + .1f) * 100, 80, 80);
-                    // if (b.isCapital) {
-                    // g.setColor(Color.orange);
-                    // g.fillRect((i + .3f) * 100, (j + .3f) * 100, 40, 40);
-                    // }
 
                     g.setColor(Color.black);
                     g.drawString(Integer.toString(b.height), 100 + (i + .5f) * 100 - 5, (j + .5f) * 100 - 10);
@@ -71,12 +64,14 @@ public class PlayGameState extends BasicGameState {
         switch (board.state) {
         case PAUSED:
             g.setColor(Color.white);
-            g.drawString("PAUSED", container.getWidth() / 2, container.getHeight() / 2);
+            String msg = "PAUSED";
+            g.drawString(msg, (container.getWidth() - g.getFont().getWidth(msg)) / 2, container.getHeight() / 2);
             break;
         case DONE:
             g.setColor(Color.white);
             Player winner = board.player1.hasCapital ? board.player1 : board.player2;
-            g.drawString(winner.name + " WINS!", container.getWidth() / 2, container.getHeight() / 2);
+            msg = winner.name + " WINS!";
+            g.drawString(msg, (container.getWidth() - g.getFont().getWidth(msg)) / 2, container.getHeight() / 2);
             break;
         }
     }
@@ -95,11 +90,14 @@ public class PlayGameState extends BasicGameState {
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
-        player1Building = new Image("resources/player1.png");
-        player1Capital = new Image("resources/player1capital.png");
-        player2Building = new Image("resources/player2.png");
-        player2Capital = new Image("resources/player2capital.png");
-        disabled = new Image("resources/disabled.png");
+        player1BuildingImage = new Image("resources/player1.png");
+        player1CapitalImage = new Image("resources/player1capital.png");
+        player2BuildingImage = new Image("resources/player2.png");
+        player2CapitalImage = new Image("resources/player2capital.png");
+        disabledOverlayImage = new Image("resources/disabled.png");
+
+        buildSound = new Sound("resources/boom.wav");
+        collapseSound = new Sound("resources/crash.wav");
     }
 
     private static float bound(float num, int min, int max) {
@@ -114,7 +112,7 @@ public class PlayGameState extends BasicGameState {
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        if (container.getInput().isKeyPressed(Input.KEY_LSHIFT) || container.getInput().isKeyPressed(Input.KEY_RSHIFT)) {
+        if (container.getInput().isKeyPressed(Input.KEY_ESCAPE) || container.getInput().isKeyPressed(Input.KEY_BACK)) {
             game.enterState(0);
         }
         switch (board.state) {
@@ -126,7 +124,7 @@ public class PlayGameState extends BasicGameState {
             updatePlayer(container, game, delta, board.player1, Input.KEY_W, Input.KEY_A, Input.KEY_S, Input.KEY_D,
                     Input.KEY_T, Input.KEY_Y);
             updatePlayer(container, game, delta, board.player2, Input.KEY_UP, Input.KEY_LEFT, Input.KEY_DOWN,
-                    Input.KEY_RIGHT, Input.KEY_PERIOD, Input.KEY_COMMA);
+                    Input.KEY_RIGHT, Input.KEY_COMMA, Input.KEY_PERIOD);
             break;
         case PAUSED:
             if (container.getInput().isKeyPressed(Input.KEY_SPACE)) {
@@ -164,6 +162,7 @@ public class PlayGameState extends BasicGameState {
                         Building b = board.buildings[player.getXCursorIndex()][player.getYCursorIndex()];
                         if (b != null && b.owner == player) {
                             board.knockOverBuilding(player.getXCursorIndex(), player.getYCursorIndex(), dir);
+                            collapseSound.play();
                             player.actionCount = 0;
                             if (!board.player1.hasCapital || !board.player2.hasCapital) {
                                 board.state = Board.BoardState.DONE;
@@ -204,6 +203,7 @@ public class PlayGameState extends BasicGameState {
                         b.height++;
                         player.actionCount = 0;
                     }
+                    buildSound.play();
                 }
             }
         }

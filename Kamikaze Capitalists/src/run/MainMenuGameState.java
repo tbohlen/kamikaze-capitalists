@@ -91,12 +91,15 @@ public class MainMenuGameState extends BasicGameState {
         }
         logoImage.draw(40, -50);
         g.setColor(Color.white);
-        g.drawString("ESC to exit", 50, 50);
+        String msg = "by Daniel Heins, Todd Layton, Wei Wei Lu, Turner Bohlen, and Jeremy Sharpe";
+        g.drawString(msg, (container.getWidth() - g.getFont().getWidth(msg)) / 2, 425);
+        g.drawString("ESC or BACKSPACE to exit", 50, 50);
     }
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        if (container.getInput().isKeyPressed(Input.KEY_ESCAPE) && container.getInput().isKeyDown(Input.KEY_ESCAPE)) {
+        if (container.getInput().isKeyPressed(Input.KEY_ESCAPE) && container.getInput().isKeyDown(Input.KEY_ESCAPE)
+                || container.getInput().isKeyPressed(Input.KEY_BACK) && container.getInput().isKeyDown(Input.KEY_BACK)) {
             container.exit();
         }
         for (int i = 0; i < buttons.length; i++) {
