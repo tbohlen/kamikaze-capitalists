@@ -41,7 +41,7 @@ public class MainMenuGameState extends BasicGameState {
             if (i == 1)
                 buttonImage = new Image("resources/instructions.png");
 
-            Sound buttonSound = new Sound("lwjgl/res/ding.wav");
+            Sound buttonSound = new Sound("resources/crash.wav");
 
             buttons[i] = new SimpleButton(buttonContainer, buttonImage, buttonImage, buttonSound);
 
