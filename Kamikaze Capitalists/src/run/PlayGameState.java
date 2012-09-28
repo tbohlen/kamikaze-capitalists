@@ -26,7 +26,7 @@ public class PlayGameState extends BasicGameState {
 
     private Sound buildSound, collapseSound;
 
-    public static int RUBBLE_TIME = 1000; // rubble hangs around for a second
+    public static int RUBBLE_TIME = 4000; // rubble hangs around for a second
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
@@ -219,7 +219,7 @@ public class PlayGameState extends BasicGameState {
                 // building
                 if (board.isConnectedToCapital(player.getXCursorIndex(), player.getYCursorIndex(), player)) {
                     Building b = board.buildings[player.getXCursorIndex()][player.getYCursorIndex()];
-                    if (b == null || b.isRubble) {
+                    if (b == null) {
                         board.buildings[player.getXCursorIndex()][player.getYCursorIndex()] = new Building(player);
                         player.actionCount = 0;
                     } else if (b.owner == player && !b.isRubble) {
