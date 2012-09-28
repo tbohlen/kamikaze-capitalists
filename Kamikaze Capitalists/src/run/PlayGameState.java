@@ -1,5 +1,7 @@
 package run;
 
+import java.util.Date;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -9,8 +11,6 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
-
-import java.util.Date;
 
 import core.Board;
 import core.Board.Direction;
@@ -38,7 +38,7 @@ public class PlayGameState extends BasicGameState {
                 g.setColor(Color.gray);
                 g.fillRect(100 + (i + 0.05f) * 100, (j + 0.05f) * 100, 90, 90);
                 if (b == null) {
-                } else if (b.isRubble == false){
+                } else if (b.isRubble == false) {
                     Image im;
                     if (b.owner == board.player1) {
                         if (b.isCapital) {
@@ -60,18 +60,15 @@ public class PlayGameState extends BasicGameState {
 
                     g.setColor(Color.black);
                     g.drawString(Integer.toString(b.height), 100 + (i + .5f) * 100 - 5, (j + .5f) * 100 - 10);
-                }
-                else {
+                } else {
                     Date currentDate = new Date();
                     if (currentDate.getTime() > b.rubbleStart + RUBBLE_TIME) {
                         board.buildings[i][j] = null;
-                    }
-                    else {
+                    } else {
                         Image im;
                         if (b.owner == board.player1) {
                             im = player1RubbleImage;
-                        }
-                        else {
+                        } else {
                             im = player2RubbleImage;
                         }
                         im.draw(100 + (i + 0.1f) * 100, (j + 0.1f) * 100);
@@ -91,7 +88,7 @@ public class PlayGameState extends BasicGameState {
             g.setColor(Color.white);
             Player winner = board.player1.hasCapital ? board.player1 : board.player2;
             msg = winner.name + " WINS!" + "\n" + "Press SPACE to play again" + "\n"
-                + "Press ESC or BACKSPACE for main manu";
+                    + "Press ESC or BACKSPACE for main manu";
             g.drawString(msg, (container.getWidth() - g.getFont().getWidth(msg)) / 2, container.getHeight() / 2);
             break;
         }
@@ -222,11 +219,12 @@ public class PlayGameState extends BasicGameState {
                     if (b == null) {
                         board.buildings[player.getXCursorIndex()][player.getYCursorIndex()] = new Building(player);
                         player.actionCount = 0;
+                        buildSound.play();
                     } else if (b.owner == player && !b.isRubble) {
                         b.height++;
                         player.actionCount = 0;
+                        buildSound.play();
                     }
-                    buildSound.play();
                 }
             }
         }

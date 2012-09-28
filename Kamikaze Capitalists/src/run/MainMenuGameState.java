@@ -93,7 +93,7 @@ public class MainMenuGameState extends BasicGameState {
         g.setColor(Color.white);
         String msg = "by Daniel Heins, Todd Layton, Wei Wei Lu, Turner Bohlen, and Jeremy Sharpe";
         g.drawString(msg, (container.getWidth() - g.getFont().getWidth(msg)) / 2, 425);
-        g.drawString("ESC or BACKSPACE to exit", 50, 50);
+        g.drawString("ESCAPSE or BACKSPACE to exit", 50, 50);
     }
 
     @Override

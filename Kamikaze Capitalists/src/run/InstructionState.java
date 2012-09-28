@@ -68,7 +68,7 @@ public class InstructionState extends BasicGameState {
                 + "is the vertical rectangle toward the side of the screen colored your color.\n\n"
                 + "Press SPACE to pause/unpause the game, ESC or BACKSPACE to quit.\n", 50, 100);
         // buttons[0].render(container, g);
-        g.drawString("ESCAPE or BACKSPACE to go back", 00, 50);
+        g.drawString("ESCAPE or BACKSPACE to go back", 50, 50);
     }
 
     @Override
