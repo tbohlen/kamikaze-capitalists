@@ -51,7 +51,7 @@ public class Game {
         searched[x][y] = true;
 
         Building b = buildings[x][y];
-        if (b == null || !b.owner.equals(player)) {
+        if (b == null || !b.owner.equals(player) || b.isRubble) {
             if (!isInitial) {
                 return false;
             }

@@ -2,7 +2,7 @@ package core;
 
 public class Board {
 
-    public final Player player1, player2;
+    public final Player player1, player2, rubblePlayer;
 
     public final int width, height;
 
@@ -20,6 +20,7 @@ public class Board {
     public Board(int width, int height) {
         player1 = new Player("Player 1"); // could be modifiable by the players
         player2 = new Player("Player 2");
+        rubblePlayer = new Player("Rubble");
 
         this.width = width;
         this.height = height;
@@ -51,7 +52,7 @@ public class Board {
         searched[x][y] = true;
 
         Building b = buildings[x][y];
-        if (b == null || !b.owner.equals(player)) {
+        if (b == null || !b.owner.equals(player) || b.isRubble) {
             if (!isInitial) {
                 return false;
             }
@@ -107,7 +108,9 @@ public class Board {
                     b.owner.hasCapital = false;
                 }
             }
-            buildings[x][y] = null;
+            if (buildings[x][y] != null) {
+                buildings[x][y].makeRubble();
+            }
             x += dir.dx;
             y += dir.dy;
             if (x < 0 || x >= width || y < 0 || y >= height) {

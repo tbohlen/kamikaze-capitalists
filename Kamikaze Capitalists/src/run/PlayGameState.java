@@ -10,6 +10,8 @@ import org.newdawn.slick.Sound;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import java.util.Date;
+
 import core.Board;
 import core.Board.Direction;
 import core.Building;
@@ -20,9 +22,11 @@ public class PlayGameState extends BasicGameState {
     private Board board;
 
     private Image player1BuildingImage, player1CapitalImage, player2BuildingImage, player2CapitalImage,
-            disabledOverlayImage;
+            disabledOverlayImage, player1RubbleImage, player2RubbleImage;
 
     private Sound buildSound, collapseSound;
+
+    public static int RUBBLE_TIME = 1000; // rubble hangs around for a second
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
@@ -34,7 +38,7 @@ public class PlayGameState extends BasicGameState {
                 g.setColor(Color.gray);
                 g.fillRect(100 + (i + 0.05f) * 100, (j + 0.05f) * 100, 90, 90);
                 if (b == null) {
-                } else {
+                } else if (b.isRubble == false){
                     Image im;
                     if (b.owner == board.player1) {
                         if (b.isCapital) {
@@ -56,6 +60,23 @@ public class PlayGameState extends BasicGameState {
 
                     g.setColor(Color.black);
                     g.drawString(Integer.toString(b.height), 100 + (i + .5f) * 100 - 5, (j + .5f) * 100 - 10);
+                }
+                else {
+                    Date currentDate = new Date();
+                    if (currentDate.getTime() > b.rubbleStart + RUBBLE_TIME) {
+                        board.buildings[i][j] = null;
+                        System.out.println("destroying rubble based on age");
+                    }
+                    else {
+                        Image im;
+                        if (b.owner == board.player1) {
+                            im = player1RubbleImage;
+                        }
+                        else {
+                            im = player2RubbleImage;
+                        }
+                        im.draw(100 + (i + 0.1f) * 100, (j + 0.1f) * 100);
+                    }
                 }
             }
         }
@@ -95,6 +116,8 @@ public class PlayGameState extends BasicGameState {
         player2BuildingImage = new Image("resources/player2.png");
         player2CapitalImage = new Image("resources/player2capital.png");
         disabledOverlayImage = new Image("resources/disabled.png");
+        player1RubbleImage = new Image("resources/player1rubble.png");
+        player2RubbleImage = new Image("resources/player2rubble.png");
 
         buildSound = new Sound("resources/boom.wav");
         collapseSound = new Sound("resources/crash.wav");
@@ -160,7 +183,7 @@ public class PlayGameState extends BasicGameState {
                     if (dir != null) {
                         // collapsing
                         Building b = board.buildings[player.getXCursorIndex()][player.getYCursorIndex()];
-                        if (b != null && b.owner == player) {
+                        if (b != null && b.owner == player && !b.isRubble) {
                             board.knockOverBuilding(player.getXCursorIndex(), player.getYCursorIndex(), dir);
                             collapseSound.play();
                             player.actionCount = 0;
@@ -196,10 +219,10 @@ public class PlayGameState extends BasicGameState {
                 // building
                 if (board.isConnectedToCapital(player.getXCursorIndex(), player.getYCursorIndex(), player)) {
                     Building b = board.buildings[player.getXCursorIndex()][player.getYCursorIndex()];
-                    if (b == null) {
+                    if (b == null || b.isRubble) {
                         board.buildings[player.getXCursorIndex()][player.getYCursorIndex()] = new Building(player);
                         player.actionCount = 0;
-                    } else if (b.owner == player) {
+                    } else if (b.owner == player && !b.isRubble) {
                         b.height++;
                         player.actionCount = 0;
                     }
