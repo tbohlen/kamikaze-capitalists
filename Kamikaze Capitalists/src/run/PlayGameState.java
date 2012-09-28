@@ -65,7 +65,6 @@ public class PlayGameState extends BasicGameState {
                     Date currentDate = new Date();
                     if (currentDate.getTime() > b.rubbleStart + RUBBLE_TIME) {
                         board.buildings[i][j] = null;
-                        System.out.println("destroying rubble based on age");
                     }
                     else {
                         Image im;
@@ -85,13 +84,14 @@ public class PlayGameState extends BasicGameState {
         switch (board.state) {
         case PAUSED:
             g.setColor(Color.white);
-            String msg = "PAUSED";
+            String msg = "PAUSED" + "\n" + "Press SPACE to unpause";
             g.drawString(msg, (container.getWidth() - g.getFont().getWidth(msg)) / 2, container.getHeight() / 2);
             break;
         case DONE:
             g.setColor(Color.white);
             Player winner = board.player1.hasCapital ? board.player1 : board.player2;
-            msg = winner.name + " WINS!";
+            msg = winner.name + " WINS!" + "\n" + "Press SPACE to play again" + "\n"
+                + "Press ESC or BACKSPACE for main manu";
             g.drawString(msg, (container.getWidth() - g.getFont().getWidth(msg)) / 2, container.getHeight() / 2);
             break;
         }

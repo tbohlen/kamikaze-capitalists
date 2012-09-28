@@ -53,19 +53,22 @@ public class InstructionState extends BasicGameState {
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         g.setColor(Color.white);
-        g.drawString("Your goal is to destroy your opponent's capital building.\n"
-                + "Buildings can be destroyed by collapsing your buildings on them.\n" + "\n"
-                + "Taller building will collapse across more spaces (building's height minus 1).\n"
-                + "You can only build on or collapse spaces which are connected to your capital\n"
-                + "by your own buildings, and only once your action bar has filled.\n" + "\n"
-                + "To move: use directional keys\n" + "To build: press build key\n"
-                + "To collapse: hold collapse key and press a directional key\n" + "\n" + "Player 1 (red):\n"
-                + "directional keys = WASD, build key = T, collapse key = Y\n" + "Player 2 (blue):\n"
-                + "directional keys = arrow keys, build key = COMMA, collapse key = PERIOD\n" + "\n"
-                + "During the game, press SPACE to pause/unpause, ESC or BACKSPACE to quit.\n"
-                + "Once the game is over, prese SPACE to start a new game, ESC or BACKSPACE to quit.\n", 100, 150);
+        g.drawString("Red Player: directional keys: WASD, build: T, collapse: Y\n"
+                + "Blue Player: directional keys: arrow keys, build: COMMA, collapse: PERIOD\n\n"
+                + "Your goal is to destroy your opponent's capital building. Buildings are destroyed\n"
+                + "when another building is knocked over on top of them.\n" + "\n"
+                + "Knocked-down buildings destroy a number of squares equal to their height minus 1.\n\n"
+                + "Move your cursor using the directional keys, build a building or additional\n"
+                + "story by pressing the build key, and knock one of your buildings over by holding\n"
+                + "the collapse key and pressing a directional key to indicate where the building\n"
+                + "should fall.\n\n"
+                + "You may only build on or collapse buildings on spaces which are connected to your\n"
+                + "capital through a chain of your own buildings.\n\n"
+                + "You may take one action every time your action bar fills up. Your action bar\n"
+                + "is the vertical rectangle toward the side of the screen colored your color.\n\n"
+                + "Press SPACE to pause/unpause the game, ESC or BACKSPACE to quit.\n", 50, 100);
         // buttons[0].render(container, g);
-        g.drawString("ESCAPE or BACKSPACE to go back", 50, 50);
+        g.drawString("ESCAPE or BACKSPACE to go back", 00, 50);
     }
 
     @Override
