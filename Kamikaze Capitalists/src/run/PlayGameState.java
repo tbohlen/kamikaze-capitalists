@@ -26,7 +26,7 @@ public class PlayGameState extends BasicGameState {
 
     private Sound buildSound, collapseSound;
 
-    public static int RUBBLE_TIME = 4000; // rubble hangs around for a second
+    public static int RUBBLE_TIME = 2000; // rubble hangs around for a second
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {

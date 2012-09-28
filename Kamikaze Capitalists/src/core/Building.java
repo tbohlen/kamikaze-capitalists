@@ -29,8 +29,9 @@ public class Building {
         this.isCapital = isCapital;
     }
 
-    public void makeRubble() {
+    public void makeRubble(Player newOwner) {
         this.isRubble = true;
+        this.owner = newOwner;
         this.rubbleStart = (new Date()).getTime();
     }
 }

@@ -109,11 +109,11 @@ public class Board {
                 }
             }
             if (b != null) {
-                b.makeRubble();
+                b.makeRubble(player);
             }
             else {
                 Building rubble = new Building(player);
-                rubble.makeRubble();
+                rubble.makeRubble(player);
                 buildings[x][y] = rubble;
             }
             x += dir.dx;
