@@ -183,7 +183,7 @@ public class PlayGameState extends BasicGameState {
                     if (dir != null) {
                         // collapsing
                         Building b = board.buildings[player.getXCursorIndex()][player.getYCursorIndex()];
-                        if (b != null && b.owner == player && !b.isRubble) {
+                        if (b != null && b.owner == player && !b.isRubble && !b.isCapital) {
                             board.knockOverBuilding(player.getXCursorIndex(), player.getYCursorIndex(), dir);
                             collapseSound.play();
                             player.actionCount = 0;
