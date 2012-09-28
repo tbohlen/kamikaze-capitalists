@@ -19,7 +19,8 @@ public class Game extends StateBasedGame {
     }
 
     public static void main(String[] args) throws SlickException {
-        System.setProperty("org.lwjgl.librarypath", System.getProperty("user.dir") + "\\lwjgl\\native\\all");
+        String separator = System.getProperty("file.separator");
+        System.setProperty("org.lwjgl.librarypath", System.getProperty("user.dir") + separator + "lwjgl" + separator + "native" + separator + "all");
         AppGameContainer app = new AppGameContainer(new Game());
         app.setVerbose(false);
         app.setDisplayMode(800, 600, true);
