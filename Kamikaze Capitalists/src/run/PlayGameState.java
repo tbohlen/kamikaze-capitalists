@@ -184,7 +184,7 @@ public class PlayGameState extends BasicGameState {
                         // collapsing
                         Building b = board.buildings[player.getXCursorIndex()][player.getYCursorIndex()];
                         if (b != null && b.owner == player && !b.isRubble && !b.isCapital) {
-                            board.knockOverBuilding(player.getXCursorIndex(), player.getYCursorIndex(), dir);
+                            board.knockOverBuilding(player.getXCursorIndex(), player.getYCursorIndex(), dir, player);
                             collapseSound.play();
                             player.actionCount = 0;
                             if (!board.player1.hasCapital || !board.player2.hasCapital) {

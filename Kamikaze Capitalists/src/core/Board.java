@@ -99,7 +99,7 @@ public class Board {
         }
     }
 
-    public void knockOverBuilding(int x, int y, Direction dir) {
+    public void knockOverBuilding(int x, int y, Direction dir, Player player) {
         // TODO: figure out exact knockover logic
         for (int h = buildings[x][y].height; h > 0; h--) {
             Building b = buildings[x][y];
@@ -108,8 +108,13 @@ public class Board {
                     b.owner.hasCapital = false;
                 }
             }
-            if (buildings[x][y] != null) {
-                buildings[x][y].makeRubble();
+            if (b != null) {
+                b.makeRubble();
+            }
+            else {
+                Building rubble = new Building(player);
+                rubble.makeRubble();
+                buildings[x][y] = rubble;
             }
             x += dir.dx;
             y += dir.dy;
